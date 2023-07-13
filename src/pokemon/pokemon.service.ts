@@ -75,10 +75,14 @@ export class PokemonService {
   }
 
   async remove(id: string) {
-    /* const pokemon = await this.findOne(id);
-    await pokemon.deleteOne(); */
+    const { deletedCount } = await this.pokemonModel.deleteOne({ _id: id });
 
-    return 'Se ha eliminado el pokemón';
+    if (deletedCount === 0) {
+      throw new BadRequestException(
+        `El pokemón con el id ${id} no se ha encontrado`,
+      );
+    }
+    return { message: `El pokemón con el ${id} ha sido eliminado` };
   }
 
   private manejarExcepciones(error: any) {
